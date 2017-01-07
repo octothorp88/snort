@@ -1,0 +1,88 @@
+This article will provide you with a breakdown of the major areas of the Snort IDS and everything you need to know about it. If you need more in-depth knowledge, check out the Snort documentation at: https://www.snort.org/#documents. If you are looking for an in-depth tutorial on how to install the software, check out our article at: https://srcport.com/articles/security/298/setup-snort-ids-on-windows/.
+
+Throughout this article, Snort commands are displayed in green text, while important information is displayed in orange text.
+
+Key Words
+
+Data Acquisition Library (DAQ) - Library used to make network card calls.
+Preprocessors are modules that run in snort before the detection engine.
+
+Key Commands
+
+-l Save output to file.
+-D Configure snort as hidden daemon.
+-O Obfuscate IP addresses for publication.
+-T Test the config file.
+
+Snort Modes
+
+There are three modes that the IDS can operate in:
+
+Sniffer Mode - Simply reads packets and displays them on screen.
+
+Packet Logger Mode - Logs the packets to disk.
+
+Network Intrusion Detection System (NIDS) - Performs detection and analysis on network traffic.
+
+
+
+While in sniffer mode you can use a combination of the flags -v -d -e to display the IP (TCP, UDP, ICMP) headers, the data and the headers and data respectively. 
+
+While in packet logger mode you can use the -l flag to set a location where the packets should be logged. For smaller file sizes use the -b flag for binary mode. If you wish to read a file into snort use the -r flag. You can use Berkeley Packet Filter (BPF) on the command line as well, so if you only wanted to view ICMP files, just pass in the icmp flag.
+
+While in NIDS mode you can specify an output file with -l as well as do anything mentioned in the previous two modes. You can pass in an IP address or range with the -h flag. In addition you can set the flagging mode with the following flags:
+
+-A fast - Simple timestamp format.
+
+-A full - Full alerts (default).
+
+-A none - Disable alerts.
+
+
+Alerts come in the format of [**] [116:56:1] (snort_decoder): T/TCP Detected [**] where the numbers in order represent:
+
+Generator ID (GID) - The ID of the component that generated the alert.
+
+Snort ID (SID) - The signature ID
+
+Revision ID (RID) - If the signature was changed it'll have an associated ID.
+
+Configuring Snort
+
+The include <file> key word can be used to include files in the snort.config file.
+
+# are comments. 
+
+Snort Rules
+
+Most snort rules are written in a single line, multi-line rules were recently introduced and can be spotted with a \ on the end of the line.
+
+There are 8 actions available to rule creators once malicious activity has been detected:
+
+alert - Generate a warning and log the packet.
+
+log - Just log the packet.
+
+pass - Ignore the packet.
+
+activate - Generate alert and execute dynamic rule.
+
+dynamic - Remain idle until activated by an activate rule
+
+drop - Block and log the packet.
+
+reject - block the packet, log it and respond to the protocol (e.g., TCP RST)
+
+sdrop - Block but don't log
+
+
+
+The -> arrow indicates the directionality of the connection. The <> arrow indicates bidirectionality. 
+
+Snort rules are separated by semicolons ;
+
+The msg:"<words>" keyword tells Snort to print out the message.
+
+Each rule must have a SID, custom rules should start at the index 1000000 for example 10000001. 
+
+The ! symbol can be used for negation.
